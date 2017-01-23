@@ -1,0 +1,32 @@
+{
+	"homepage":{
+		"title": "網站首頁",
+		"url": "http://m.svca.cc/",
+		"ttfb": 3000,
+		"ttl": 30000
+	},
+	"announcements":{
+		"title": "重要通啟",
+		"url": "http://m.svca.cc/#!/announcements",
+		"ttfb": 3000,
+		"ttl": 30000
+	},
+	"recent_messages":{
+		"title": "最近信息",
+		"url": "http://m.svca.cc/#!/recent-messages",
+		"ttfb": 3000,
+		"ttl": 30000
+	},
+	"newman":{
+		"title": "新人門訓",
+		"url": "http://m.svca.cc/#!/newman",
+		"ttfb": 3000,
+		"ttl": 30000
+	},
+	"hymns":{
+		"title": "聖徒詩歌",
+		"url": "http://m.svca.cc/#!/hymns",
+		"ttfb": 3000,
+		"ttl": 30000
+	}
+}
