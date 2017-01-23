@@ -30,7 +30,7 @@ class CoverageModule {
         // @return mixed boolean || object
         return async(() => {
             // load the page
-            await (this.getUrl(url))
+            await (browser.url(url))
             // get every anchor on the page
             let links
             try {
