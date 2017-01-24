@@ -1,6 +1,6 @@
 const appDir = __dirname,
 	assert = require(`${appDir}/../../tools/assert-fix`),
-	coverageModule = require(`${appDir}/../../tools/coverage-module`)().started,
+	coverageModule = require(`${appDir}/../../tools/coverage-module`).started,
 	testPages = require(`${appDir}/../../data/test_pages`)
 
 for(page in testPages) {
@@ -36,7 +36,7 @@ for(page in testPages) {
 		    	this.timeout(360000)
 				coverageModule.getStatusCode(url).then(
 					(value) => {
-		console.log("status code: " + value)
+						console.log("status code: " + value)
 						done(assert.strictEqual(value, 200, 'Page status isn\'t 200'))
 					}
 				)
@@ -44,7 +44,7 @@ for(page in testPages) {
 			})
 
 			if(page === 'homepage'){
-				it('All links in page are not 400+ status', function(done) {
+				it('All links in page are giving a 200', function(done) {
 			    	this.timeout(360000)
 			    	coverageModule.checkAllPageLinks(url).then(
 	                  ({output,links}) => {
