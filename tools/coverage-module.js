@@ -28,21 +28,19 @@ class CoverageModule {
     checkAllPageLinks(url) {
         // Load a page, get every url on it from anchor tags, verfiy they work
         // @return mixed boolean || object
+        
         return async(() => {
             // load the page
-            await (this.getUrl(url))
-            // get every anchor on the page
+            await (browser.url(url))
+            // get every link on the page
             let links
-            try {
-                await (browser.waitUntil(condition, ms).then(function(result) {
 
-                }))
-                links = await (this.driver.findElements(By.css("a"))).map(
-                    (element) => {
-                        // now get every href on every element
-                        return await (element.getAttribute("href"))
-                    }
-                ).filter(
+            try {
+                await (browser.waitUntil(browser.element('a'), 30000))
+                await (browser.waitUntil(browser.element('paper-icon-button'), 30000))
+                let anchorLinks = await (browser.getAttribute('a', 'href')),
+                    outlineLinks = await (browser.getAttribute('paper-icon-button', 'title'))
+                links = anchorLinks.concat(outlineLinks).filter(
                     (url) => {
                         return url && url.indexOf("http") > -1
                     }
@@ -56,25 +54,24 @@ class CoverageModule {
                     }
                 )
             } catch (e) {
-                links = e.message
+                res = e.message
             }
             // now we see if all links are not 400+ status so redirects are ok
             let isLinksArray = Array.isArray(links),
                 output = isLinksArray && links.every(
                     ({ code }) => {
-                        // code 999 is linkedIn's response if you are not a browser
-                        // that is so dumb, gotta prevent them crawler for SEO, lol
-                        return code < 400 || code === 999
+                        return code < 400
                     }
                 )
             if (!output && isLinksArray) {
                 // If not everything resolved let's get a short list of failures
                 links = links.filter(
                     ({ code }) => {
-                        return code > 400 && code !== 999
+                        return code >= 400
                     }
                 )
             }
+
             return { output, links }
         })()
     }

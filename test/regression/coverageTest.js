@@ -10,6 +10,18 @@ for(page in testPages) {
 			ttfb= testPages[page].ttfb,
 			ttl = testPages[page].ttl
 
+		checkAllLinksFailMsg = (results) => {
+          let msg = '', code = '', url = ''
+          if (Array.isArray(results)) {
+            for ({url, code} of results) {
+              msg += `url: ${url}\nstatusCode: ${code}\n`
+            }
+            return msg
+          } else if (typeof results === 'string') {
+            return results
+          }
+        }
+
 		describe(`Test ${title}`, () => {
 			it('Verify page title', function() {
 		    	this.timeout(360000)
@@ -31,11 +43,24 @@ for(page in testPages) {
 				
 			})
 
-			it('All links in page are returning 200', function() {
-		    	this.timeout(360000)
-
-			})
-
+			if(page === 'homepage'){
+				it('All links in page are not 400+ status', function(done) {
+			    	this.timeout(360000)
+			    	coverageModule.checkAllPageLinks(url).then(
+	                  ({output,links}) => {
+	                    done(
+	                      assert.strictEqual(
+	                        output,
+	                        true,
+	                        `These pages need to be checked` +
+	                        `\n${checkAllLinksFailMsg(links)}`
+	                      )
+	                    )
+	                  }
+	                )
+				})
+			}
+			
 			it('No console errors', function(done) {
 		    	this.timeout(360000)
 				coverageModule.consoleErrors(url).then(
@@ -94,4 +119,3 @@ for(page in testPages) {
 		})
 	}
 }
-
