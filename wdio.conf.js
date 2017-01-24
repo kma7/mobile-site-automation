@@ -47,7 +47,6 @@ exports.config = {
         // grid with only 5 firefox instance available you can make sure that not more than
         // 5 instance gets started at a time.
         maxInstances: 5,
-        //
         browserName: 'chrome'
     }],
     //
@@ -106,7 +105,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    // services: [],//
+    services: ['selenium-standalone'],
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: http://webdriver.io/guide/testrunner/frameworks.html
@@ -119,7 +118,6 @@ exports.config = {
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/testrunner/reporters.html
     reporters: ['spec'],
-    
     //
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/

@@ -5,7 +5,6 @@ const { headPromise } = require("./http-module"),
 
 class CoverageModule {
     constructor() {}
-
 	/**
 	 * @param {string} url - the url
 	 * @param {boolean} followRedirect - decide whether to follow redirect or not
@@ -15,7 +14,6 @@ class CoverageModule {
 	 */
     getStatusCode(url, followRedirect = true, rejectErr = true) {
         return async(() => {
-			await (browser.url(url))
             return await (headPromise(url, followRedirect, rejectErr)).response.statusCode
         })()
     }
@@ -28,13 +26,11 @@ class CoverageModule {
     checkAllPageLinks(url) {
         // Load a page, get every url on it from anchor tags, verfiy they work
         // @return mixed boolean || object
-        
         return async(() => {
-            // load the page
+            // land the page
             await (browser.url(url))
             // get every link on the page
             let links
-
             try {
                 await (browser.waitUntil(browser.element('a'), 30000))
                 await (browser.waitUntil(browser.element('paper-icon-button'), 30000))
@@ -64,7 +60,7 @@ class CoverageModule {
                     }
                 )
             if (!output && isLinksArray) {
-                // If not everything resolved let's get a short list of failures
+                // If not everything resolved, get the failures
                 links = links.filter(
                     ({ code }) => {
                         return code >= 400
@@ -88,8 +84,8 @@ class CoverageModule {
 			let errors = logs.value.filter((log) => {
 				return log.level === 'SEVERE'
 			})
-console.log('console errors: ' + errors.length)
-		  return errors
+            console.log('console errors: ' + errors.length)
+            return errors
 		})()
 	}
     /**
@@ -112,7 +108,7 @@ console.log('console errors: ' + errors.length)
             if (ttfb.value > limit) {
                 console.info('Time to first byte: ' + ttfb)
             }
-    console.log('Time to first byte: ' + ttfb.value)
+            console.log('Time to first byte: ' + ttfb.value)
             return ttfb.value <= limit
         })()
     }
@@ -136,7 +132,7 @@ console.log('console errors: ' + errors.length)
             if (ttl.value > limit) {
                 console.info('Time to load: ' + ttl)
             }
-    console.log('Time to load: ' + ttl.value)
+            console.log('Time to load: ' + ttl.value)
             return ttl.value <= limit
         })()
     }
@@ -161,16 +157,23 @@ console.log('console errors: ' + errors.length)
                     output = false
                     error = e.message
                 }
-    console.log('favicon: ' + output)
+                console.log('favicon: ' + output)
                 return { output, error }
             }
         )()
     }
 }
 
-module.exports = () => {
+module.exports = {
+    started: new CoverageModule(),
+    class: CoverageModule
+}
+
+//Once exported as a function
+/*module.exports = () => {
     return {
         started: new CoverageModule(),
         class: CoverageModule
     }
 }
+*/
