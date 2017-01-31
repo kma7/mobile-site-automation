@@ -5,13 +5,13 @@ const { headPromise } = require("./http-module"),
 
 class CoverageModule {
     constructor() {}
-	/**
-	 * @param {string} url - the url
-	 * @param {boolean} followRedirect - decide whether to follow redirect or not
-	 * @param {boolean} rejectErr - decide whether to reject error or not
-	 * Here we return a promise which resolves to statusCode
-	 * @return {promise} statusCode - returns a new promise for a url using get
-	 */
+    /**
+     * @param {string} url - the url
+     * @param {boolean} followRedirect - decide whether to follow redirect or not
+     * @param {boolean} rejectErr - decide whether to reject error or not
+     * Here we return a promise which resolves to statusCode
+     * @return {promise} statusCode - returns a new promise for a url using get
+     */
     getStatusCode(url, followRedirect = true, rejectErr = true) {
         return async(() => {
             return await (headPromise(url, followRedirect, rejectErr)).response.statusCode
@@ -71,23 +71,23 @@ class CoverageModule {
             return { output, links }
         })()
     }
-	/**
-	 * @param {string} url - url to check console errors
-	 * @param {string} severityLevel - logs to be selected
-	 * Here we go to url and get all console errors
-	 * @return {boolean} mixed boolean - boolean || array
-	*/
-	consoleErrors (url) {
-		return async(() => {
-			await (browser.url(url))
-			let logs = await(browser.log('browser'))
-			let errors = logs.value.filter((log) => {
-				return log.level === 'SEVERE'
-			})
+    /**
+     * @param {string} url - url to check console errors
+     * @param {string} severityLevel - logs to be selected
+     * Here we go to url and get all console errors
+     * @return {boolean} mixed boolean - boolean || array
+     */
+    consoleErrors(url) {
+        return async(() => {
+            await (browser.url(url))
+            let logs = await (browser.log('browser'))
+            let errors = logs.value.filter((log) => {
+                return log.level === 'SEVERE'
+            })
             console.log('console errors: ' + errors.length)
             return errors
-		})()
-	}
+        })()
+    }
     /**
      * @param {string} url - url to check responseTime
      * @param {int} limit - number of milliseconds for limit
@@ -98,7 +98,7 @@ class CoverageModule {
      */
     responseTime(url, limit) {
         return async(() => {
-    		await (browser.url(url))
+            await (browser.url(url))
             let ttfb = await (browser.execute(
                 () => {
                     return window.performance.timing.responseStart -
@@ -122,7 +122,7 @@ class CoverageModule {
      */
     loadTime(url, limit) {
         return async(() => {
-    		await (browser.url(url))
+            await (browser.url(url))
             let ttl = await (browser.execute(
                 () => {
                     return window.performance.timing.loadEventEnd -
@@ -136,7 +136,6 @@ class CoverageModule {
             return ttl.value <= limit
         })()
     }
-
     /**
      * @param {string} url - url to check favicon
      * Here we go to a url to check for favicon
@@ -144,23 +143,52 @@ class CoverageModule {
      */
     checkFavicon(url) {
         return async(() => {
-    			await (browser.url(url))
-                let error = '',
-                    output = true
-                try {
-                    await (browser.waitUntil(
-                        browser.element("link[href='favicon.ico']").value !== null, 
-                        	30000
-                     	)
-                   	)
-                } catch (e) {
-                    output = false
-                    error = e.message
-                }
-                console.log('favicon: ' + output)
-                return { output, error }
+            await (browser.url(url))
+            let error = '',
+                output = true
+            try {
+                await (browser.waitUntil(
+                    browser.element("link[href='favicon.ico']").value !== null,
+                    30000
+                ))
+            } catch (e) {
+                output = false
+                error = e.message
             }
-        )()
+            console.log('favicon: ' + output)
+            return { output, error }
+        })()
+    }
+    /**
+     * @param {url} url - land the search page 
+     * @param {string} name - Hymn name to be searched by
+     * Here we go to seach a Hymn by its name
+     * @return {boolean} boolean - return true if the Hymns if found
+     */
+    searchByName(url, name, type) {
+        return async(() => {
+            await (browser.url(url))
+            await (browser.pause(2000))
+            await (browser.waitUntil(
+                browser.element("input[id='input']").value !== null,
+                30000))
+            await (browser.setValue("input[id='input']", name))
+            await (browser.keys('Enter'))
+            await (browser.waitUntil(
+                    browser.element('#cards').value !== null,
+                    30000
+            ))
+            let hymnTitles = '',
+                found = false
+            hymnTitles = await (browser.getText('#cards'))
+            if(type === 'en') {
+                found = (hymnTitles.indexOf(name.toUpperCase()) !== -1)
+            } else {
+                found = (hymnTitles.indexOf(name) !== -1)
+            }
+    console.log(found)
+            return found
+        })()
     }
 }
 

@@ -23,6 +23,8 @@ for(page in testPages) {
         }
 
 		describe(`Test ${title}`, () => {
+			//Verify page title, not much necessary for mobile site,
+			//since all pages have the same title
 			it('Verify page title', function() {
 		    	this.timeout(360000)
 				browser.url(url)
@@ -37,12 +39,13 @@ for(page in testPages) {
 				coverageModule.getStatusCode(url).then(
 					(value) => {
 						console.log("status code: " + value)
-						done(assert.strictEqual(value, 200, 'Page status isn\'t 200'))
+						done(assert.strictEqual(value, 200, 
+							'Page status isn\'t 200'))
 					}
 				)
 				
 			})
-
+			//Only check all links in homepage
 			if(page === 'homepage'){
 				it('All links in page are giving a 200', function(done) {
 			    	this.timeout(360000)
@@ -60,7 +63,7 @@ for(page in testPages) {
 	                )
 				})
 			}
-			
+
 			it('No console errors', function(done) {
 		    	this.timeout(360000)
 				coverageModule.consoleErrors(url).then(
@@ -73,8 +76,9 @@ for(page in testPages) {
 					}
 				)
 			})
-
-			it(`Time to First Byte shouldn\'t be greater than ${ttfb/1000}s`, function(done) {
+			//Performance test. Check the time to get the first byte of page
+			it(`Time to First Byte shouldn\'t be greater than ${ttfb/1000}s`, 
+				function(done) {
 		    	this.timeout(360000)
                 coverageModule.responseTime(url, ttfb).then(
                   	(value) => {
@@ -87,8 +91,9 @@ for(page in testPages) {
                   	}
                 )
 			})
-
-			it(`Time to load shouldn\'t be greater than ${ttl/1000}s`, function(done) {
+			//Performance test. Check the time to fully loaded
+			it(`Time to load shouldn\'t be greater than ${ttl/1000}s`, 
+				function(done) {
 		    	this.timeout(360000)
                 coverageModule.loadTime(url, ttl).then(
                   	(value) => {
@@ -101,7 +106,6 @@ for(page in testPages) {
                   	}
                 )
 			})
-
 
 			it('Check favicon', function(done) {
 		    	this.timeout(360000)
