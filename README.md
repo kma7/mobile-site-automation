@@ -9,6 +9,12 @@ You will need to have Node.js (Install the latest version of Node.js) and NPM (c
 	$ cd mobile-site-automation/
 	$ npm install
 
+Set up Selenium environment
+The simplest way to get started is to use one of the NPM selenium standalone packages like: vvo/selenium-standalone (https://github.com/vvo/selenium-standalone).
+
+	$ npm install selenium-standalone@latest -g
+	$ selenium-standalone install
+
 Execute the test runner:
 
 	$ npm test
