@@ -1,17 +1,22 @@
 "use strict"
 const { headPromise } = require("./http-module"),
     async = require("asyncawait/async"),
-    await = require("asyncawait/await")
+    await = require("asyncawait/await"),
+    cn_twMap = {
+        "伟大的神": "偉大的神",
+        "你是我异象": "祢是我異象",
+        "你信实何广大": "祢信實何廣大"
+    }
 
 class CoverageModule {
     constructor() {}
-	/**
-	 * @param {string} url - the url
-	 * @param {boolean} followRedirect - decide whether to follow redirect or not
-	 * @param {boolean} rejectErr - decide whether to reject error or not
-	 * Here we return a promise which resolves to statusCode
-	 * @return {promise} statusCode - returns a new promise for a url using get
-	 */
+    /**
+     * @param {string} url - the url
+     * @param {boolean} followRedirect - decide whether to follow redirect or not
+     * @param {boolean} rejectErr - decide whether to reject error or not
+     * Here we return a promise which resolves to statusCode
+     * @return {promise} statusCode - returns a new promise for a url using get
+     */
     getStatusCode(url, followRedirect = true, rejectErr = true) {
         return async(() => {
             return await (headPromise(url, followRedirect, rejectErr)).response.statusCode
@@ -52,6 +57,7 @@ class CoverageModule {
             } catch (e) {
                 res = e.message
             }
+console.log(links)
             // now we see if all links are not 400+ status so redirects are ok
             let isLinksArray = Array.isArray(links),
                 output = isLinksArray && links.every(
@@ -67,27 +73,26 @@ class CoverageModule {
                     }
                 )
             }
-
             return { output, links }
         })()
     }
-	/**
-	 * @param {string} url - url to check console errors
-	 * @param {string} severityLevel - logs to be selected
-	 * Here we go to url and get all console errors
-	 * @return {boolean} mixed boolean - boolean || array
-	*/
-	consoleErrors (url) {
-		return async(() => {
-			await (browser.url(url))
-			let logs = await(browser.log('browser'))
-			let errors = logs.value.filter((log) => {
-				return log.level === 'SEVERE'
-			})
+    /**
+     * @param {string} url - url to check console errors
+     * @param {string} severityLevel - logs to be selected
+     * Here we go to url and get all console errors
+     * @return {boolean} mixed boolean - boolean || array
+     */
+    consoleErrors(url) {
+        return async(() => {
+            await (browser.url(url))
+            let logs = await (browser.log('browser'))
+            let errors = logs.value.filter((log) => {
+                return log.level === 'SEVERE'
+            })
             console.log('console errors: ' + errors.length)
             return errors
-		})()
-	}
+        })()
+    }
     /**
      * @param {string} url - url to check responseTime
      * @param {int} limit - number of milliseconds for limit
@@ -98,7 +103,7 @@ class CoverageModule {
      */
     responseTime(url, limit) {
         return async(() => {
-    		await (browser.url(url))
+            await (browser.url(url))
             let ttfb = await (browser.execute(
                 () => {
                     return window.performance.timing.responseStart -
@@ -122,7 +127,7 @@ class CoverageModule {
      */
     loadTime(url, limit) {
         return async(() => {
-    		await (browser.url(url))
+            await (browser.url(url))
             let ttl = await (browser.execute(
                 () => {
                     return window.performance.timing.loadEventEnd -
@@ -136,7 +141,6 @@ class CoverageModule {
             return ttl.value <= limit
         })()
     }
-
     /**
      * @param {string} url - url to check favicon
      * Here we go to a url to check for favicon
@@ -144,23 +148,95 @@ class CoverageModule {
      */
     checkFavicon(url) {
         return async(() => {
-    			await (browser.url(url))
-                let error = '',
-                    output = true
-                try {
-                    await (browser.waitUntil(
-                        browser.element("link[href='favicon.ico']").value !== null, 
-                        	30000
-                     	)
-                   	)
-                } catch (e) {
-                    output = false
-                    error = e.message
-                }
-                console.log('favicon: ' + output)
-                return { output, error }
+            await (browser.url(url))
+            let error = '',
+                output = true
+            try {
+                await (browser.waitUntil(
+                    browser.element("link[href='favicon.ico']").value !== null,
+                    30000
+                ))
+            } catch (e) {
+                output = false
+                error = e.message
             }
-        )()
+            console.log('favicon: ' + output)
+            return { output, error }
+        })()
+    }
+    /**
+     * @param {string} url - land the search page 
+     * @param {string} name - Hymn name to be searched by
+     * @param {string} type - Tell different test approaches
+     * Here we go to seach a Hymn by its name
+     * @return {boolean} boolean - return true if the Hymn is found
+     */
+    searchByName(url, name, type) {
+        return async(() => {
+            await (browser.url(url))
+            await (browser.pause(2000))
+            await (browser.waitUntil(
+                browser.element("input[id='input']").value !== null,
+                30000))
+            await (browser.setValue("input[id='input']", name))
+            await (browser.keys('Enter'))
+            await (browser.waitUntil(
+                    browser.element('#cards').value !== null,
+                    30000
+            ))
+            let hymnTitles = '',
+                found = false,
+                enTitles = [],
+                chTitles = [],
+                indexTitles = [],
+                index
+            hymnTitles = await (browser.getText('#cards'))
+            let hymnArr = hymnTitles.split('\n')
+            for(index = 0; index < hymnArr.length; index++) {
+                //Group all English titles, Chinese titles & hymn indexes
+                if(index % 3 === 0) {
+                    chTitles.push(hymnArr[index])
+                } else if(index % 3 === 1) {
+                    enTitles.push(hymnArr[index])
+                } else {
+                    indexTitles.push(hymnArr[index])
+                }
+            }
+            if(type === 'en') {
+                name = name.toUpperCase()
+                found = enTitles.every((title) => {
+                    title = title.toUpperCase()
+                    return title.includes(name)
+                })
+            } else if(type === 'zh-CN' || type === 'zh-TW') {
+                if(type === 'zh-CN') {
+                    name = cn_twMap[name]
+                }
+                found = chTitles.every((title) => {
+                    return title.includes(name)
+                })
+            } else if(type === 'index') {
+                found = indexTitles.every((title) => {
+                    return title.includes(name)
+                })
+            } else if(type === 'space') {
+                //Tested 'hope ', which will have two items as output
+                name = name.trim().toUpperCase()
+                found = (hymnTitles.indexOf(name) !== -1 && 
+                    hymnTitles.lastIndexOf(name) !== -1 &&
+                    hymnTitles.indexOf(name) !== hymnTitles.lastIndexOf(name)
+                    )
+            } else if(type === 'fail') {
+                found = (hymnTitles.includes(name) === false)
+            } else {
+                found = (hymnTitles.indexOf(name) !== -1 && 
+                    hymnTitles.lastIndexOf(name) !== -1 &&
+                    hymnTitles.indexOf(name) !== hymnTitles.lastIndexOf(name)
+                    )
+            }
+    console.log(found)
+            return found
+        })()
     }
 }
 

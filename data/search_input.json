@@ -1,0 +1,15 @@
+{
+	"url": "http://m.svca.cc/#!/hymns",
+	"by_name": {
+		"english": ["Great Is Thy Faithfulness", "Be Thou My Vision", "To God Be The Glory"],
+		"simplified": ["伟大的神", "你是我异象", "你信实何广大"],
+		"traditional": ["偉大的神", "祢是我異象", "祢信實何廣大"]
+	},
+	"by_index": ["001", "111", "333", "716"],
+	"special_input": {
+		"long_and_short": ["001", "111", "頌讚與尊貴", "愛救了我", "VICTORY IN JESUS"],
+		"with_space": ["hope "],
+		"with_special_char": ["* # & @", "#This is not implemented"]
+	},
+	"test_fail": ["000", "717", "平凡", "平安頌", "Glorious Christ"]
+}

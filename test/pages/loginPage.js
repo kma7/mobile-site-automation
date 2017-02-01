@@ -4,13 +4,13 @@ const Page = require('./page')
 class LoginPage extends Page {
 
     get username() {
-        return browser.element('#ius-userid')
+        return browser.element('#userid')
     }
     get password() {
-        return browser.element('#ius-password')
+        return browser.element('#password')
     }
     get signInSubmit() {
-        return browser.element('#ius-sign-in-submit-btn-text')
+        return browser.element('#sign-in-submit-btn')
     }
     
 }
