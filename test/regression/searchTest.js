@@ -1,24 +1,16 @@
+"use strict";
 const appDir = __dirname,
 	assert = require(`${appDir}/../../tools/assert-fix`),
 	coverageModule = require(`${appDir}/../../tools/coverage-module`).started,
 	searchApproaches = require(`${appDir}/../../data/search_input`),
 	url = searchApproaches['url']
 
-describe('Search by Hymn names', () => {
-	describe('Search by English names', () => {
+describe('Searched by Hymn names', () => {
+	describe('Names in English', () => {
 		searchApproaches["by_name"].english.forEach(
 			(name) => {
 				it(`Searched: ${name}`, function(done) {
 		    		this.timeout(360000)
-		    		/*browser.url(url)
-		    		browser.pause(1000)
-		    		browser.setValue("input[id='input']", name)
-
-		    		browser.keys('Enter')
-		    		browser.waitUntil(browser.element('#cards').value !== null, 30000)
-		    		let titles = browser.getText('#cards')
-		    console.log(titles.indexOf(name.toUpperCase()) !== -1)*/
-
 		    		coverageModule.searchByName(url, name, 'en').then(
 		    			(value) => {
 		    				done(assert.isTrue(
@@ -31,4 +23,111 @@ describe('Search by Hymn names', () => {
 			}
 		)
 	})
+	describe('Names in simplified Chinese', () => {
+		searchApproaches["by_name"].simplified.forEach(
+			(name) => {
+				it(`Searched: ${name}`, function(done) {
+		    		this.timeout(360000)
+		    		coverageModule.searchByName(url, name, 'zh-CN').then(
+		    			(value) => {
+		    				done(assert.isTrue(
+							    value,
+							    `Did not find Hymn: ${name}`)
+							)
+		    			}
+		    		)
+				})
+			}
+		)
+	})
+	describe('Names in traditional Chinese', () => {
+		searchApproaches["by_name"].traditional.forEach(
+			(name) => {
+				it(`Searched: ${name}`, function(done) {
+		    		this.timeout(360000)
+		    		coverageModule.searchByName(url, name, 'zh-TW').then(
+		    			(value) => {
+		    				done(assert.isTrue(
+							    value,
+							    `Did not find Hymn: ${name}`)
+							)
+		    			}
+		    		)
+				})
+			}
+		)
+	})
+})
+
+describe('Searched by Hymn index', () => {
+	searchApproaches["by_index"].forEach(
+		(index) => {
+			it(`Searched index: ${index}`, function(done) {
+		    	this.timeout(360000)
+		    	coverageModule.searchByName(url, index, 'index').then(
+	    			(value) => {
+	    				done(assert.isTrue(
+						    value,
+						    `Did not find Hymn: ${index}`)
+						)
+	    			}
+		    	)
+			})
+		}
+	)
+})
+
+describe('Searched by special input', () => {
+	describe('Input are in both long & short hymn books', () => {
+		searchApproaches["special_input"].long_and_short.forEach(
+			(input) => {
+				it(`Searched input: ${input}`, function(done) {
+			    	this.timeout(360000)
+			    	coverageModule.searchByName(url, input, 'input').then(
+		    			(value) => {
+		    				done(assert.isTrue(
+							    value,
+							    `Hymn is not found in both long & short hymn books: ${input}`)
+							)
+		    			}
+			    	)
+				})
+			}
+		)
+	})
+	describe('Input contains space', () => {
+		searchApproaches["special_input"].with_space.forEach(
+			(input) => {
+				it(`Searched input: ${input}`, function(done) {
+			    	this.timeout(360000)
+			    	coverageModule.searchByName(url, input, 'space').then(
+		    			(value) => {
+		    				done(assert.isTrue(
+							    value,
+							    `Did not find Hymn: ${input}`)
+							)
+		    			}
+			    	)
+				})
+			}
+		)
+	})
+	describe('Input is designed to fail', () => {
+		searchApproaches["test_fail"].forEach(
+			(input) => {
+				it(`Searched but not found: ${input}`, function(done) {
+			    	this.timeout(360000)
+			    	coverageModule.searchByName(url, input, 'fail').then(
+		    			(value) => {
+		    				done(assert.isTrue(
+							    value,
+							    `Did not find Hymn: ${input}`)
+							)
+		    			}
+			    	)
+				})
+			}
+		)
+	})
+
 })

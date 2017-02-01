@@ -1,7 +1,12 @@
 "use strict"
 const { headPromise } = require("./http-module"),
     async = require("asyncawait/async"),
-    await = require("asyncawait/await")
+    await = require("asyncawait/await"),
+    cn_twMap = {
+        "伟大的神": "偉大的神",
+        "你是我异象": "祢是我異象",
+        "你信实何广大": "祢信實何廣大"
+    }
 
 class CoverageModule {
     constructor() {}
@@ -52,6 +57,7 @@ class CoverageModule {
             } catch (e) {
                 res = e.message
             }
+console.log(links)
             // now we see if all links are not 400+ status so redirects are ok
             let isLinksArray = Array.isArray(links),
                 output = isLinksArray && links.every(
@@ -67,7 +73,6 @@ class CoverageModule {
                     }
                 )
             }
-
             return { output, links }
         })()
     }
@@ -160,10 +165,11 @@ class CoverageModule {
         })()
     }
     /**
-     * @param {url} url - land the search page 
+     * @param {string} url - land the search page 
      * @param {string} name - Hymn name to be searched by
+     * @param {string} type - Tell different test approaches
      * Here we go to seach a Hymn by its name
-     * @return {boolean} boolean - return true if the Hymns if found
+     * @return {boolean} boolean - return true if the Hymn is found
      */
     searchByName(url, name, type) {
         return async(() => {
@@ -179,12 +185,54 @@ class CoverageModule {
                     30000
             ))
             let hymnTitles = '',
-                found = false
+                found = false,
+                enTitles = [],
+                chTitles = [],
+                indexTitles = [],
+                index
             hymnTitles = await (browser.getText('#cards'))
+            let hymnArr = hymnTitles.split('\n')
+            for(index = 0; index < hymnArr.length; index++) {
+                //Group all English titles, Chinese titles & hymn indexes
+                if(index % 3 === 0) {
+                    chTitles.push(hymnArr[index])
+                } else if(index % 3 === 1) {
+                    enTitles.push(hymnArr[index])
+                } else {
+                    indexTitles.push(hymnArr[index])
+                }
+            }
             if(type === 'en') {
-                found = (hymnTitles.indexOf(name.toUpperCase()) !== -1)
+                name = name.toUpperCase()
+                found = enTitles.every((title) => {
+                    title = title.toUpperCase()
+                    return title.includes(name)
+                })
+            } else if(type === 'zh-CN' || type === 'zh-TW') {
+                if(type === 'zh-CN') {
+                    name = cn_twMap[name]
+                }
+                found = chTitles.every((title) => {
+                    return title.includes(name)
+                })
+            } else if(type === 'index') {
+                found = indexTitles.every((title) => {
+                    return title.includes(name)
+                })
+            } else if(type === 'space') {
+                //Tested 'hope ', which will have two items as output
+                name = name.trim().toUpperCase()
+                found = (hymnTitles.indexOf(name) !== -1 && 
+                    hymnTitles.lastIndexOf(name) !== -1 &&
+                    hymnTitles.indexOf(name) !== hymnTitles.lastIndexOf(name)
+                    )
+            } else if(type === 'fail') {
+                found = (hymnTitles.includes(name) === false)
             } else {
-                found = (hymnTitles.indexOf(name) !== -1)
+                found = (hymnTitles.indexOf(name) !== -1 && 
+                    hymnTitles.lastIndexOf(name) !== -1 &&
+                    hymnTitles.indexOf(name) !== hymnTitles.lastIndexOf(name)
+                    )
             }
     console.log(found)
             return found

@@ -1,25 +1,26 @@
+"use strict";
 const appDir = __dirname,
 	assert = require(`${appDir}/../../tools/assert-fix`),
 	coverageModule = require(`${appDir}/../../tools/coverage-module`).started,
 	testPages = require(`${appDir}/../../data/test_pages`)
 
-for(page in testPages) {
+for(let page in testPages) {
 	if(testPages.hasOwnProperty(page)) {
 		let title = testPages[page].title,
 			url = testPages[page].url,
 			ttfb= testPages[page].ttfb,
 			ttl = testPages[page].ttl
 
-		checkAllLinksFailMsg = (results) => {
-          let msg = '', code = '', url = ''
-          if (Array.isArray(results)) {
-            for ({url, code} of results) {
-              msg += `url: ${url}\nstatusCode: ${code}\n`
-            }
-            return msg
-          } else if (typeof results === 'string') {
-            return results
-          }
+		let checkAllLinksFailMsg = (results) => {
+	          let msg = '', code = '', url = ''
+	          if (Array.isArray(results)) {
+	            for ({url, code} of results) {
+	              msg += `url: ${url}\nstatusCode: ${code}\n`
+	            }
+	            return msg
+	          } else if (typeof results === 'string') {
+	            return results
+	          }
         }
 
 		describe(`Test ${title}`, () => {
@@ -92,7 +93,7 @@ for(page in testPages) {
                 )
 			})
 			//Performance test. Check the time to fully loaded
-			it(`Time to load shouldn\'t be greater than ${ttl/1000}s`, 
+			it(`Time to fully load shouldn\'t be greater than ${ttl/1000}s`, 
 				function(done) {
 		    	this.timeout(360000)
                 coverageModule.loadTime(url, ttl).then(

@@ -10,8 +10,10 @@
 
 3, Search input should trim head & tail white spaces
 
-4, Some hymns have space in between words, i.e: "祢信實何廣大"
+4, Some hymns have space in between words, i.e: "祢信實何廣大", "頌讚與尊貴"
 
 5, “你” & “祢” 
 
-6, Id should be unique, instead of have same IDs for different elements. Wasted a lot of time & efforts...i.e: id='input'
+6, Id should be unique, instead of have same IDs for different elements. i.e: id='input'
+
+7, Some Hymns don't have corresponding English names
