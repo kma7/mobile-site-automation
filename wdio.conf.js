@@ -12,7 +12,6 @@ exports.config = {
     specs: [
         './test/regression/**/coverageTest.js',
         './test/regression/**/searchTest.js'
-
     ],
     suites: {
         login:[],
@@ -141,6 +140,10 @@ exports.config = {
     //
     // Gets executed before test execution begins. At this point you can access all global
     // variables, such as `browser`. It is the perfect place to define custom commands.
+    //By default it will call index.js
+    before: function () {
+      require('./utilities')()
+    }
     // before: function (capabilities, specs) {
     // },
     //

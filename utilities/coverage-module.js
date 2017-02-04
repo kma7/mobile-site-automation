@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 const { headPromise } = require("./http-module"),
     async = require("asyncawait/async"),
     await = require("asyncawait/await"),
@@ -182,8 +182,7 @@ console.log(links)
             await (browser.keys('Enter'))
             await (browser.waitUntil(
                     browser.element('#cards').value !== null,
-                    30000
-            ))
+                    30000))
             let hymnTitles = '',
                 found = false,
                 enTitles = [],
