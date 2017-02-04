@@ -1,8 +1,7 @@
 "use strict";
-const appDir = __dirname,
-	assert = require(`${appDir}/../../tools/assert-fix`),
-	coverageModule = require(`${appDir}/../../tools/coverage-module`).started,
-	testPages = require(`${appDir}/../../data/test_pages`)
+const coverageTest = coverageModule.started,
+	// coverageTest = require(`${appDir}/../../utilities/coverage-module`).started,
+	testPages = require(`${utilDirectory}/../data/test_pages`)
 
 for(let page in testPages) {
 	if(testPages.hasOwnProperty(page)) {
@@ -10,7 +9,6 @@ for(let page in testPages) {
 			url = testPages[page].url,
 			ttfb= testPages[page].ttfb,
 			ttl = testPages[page].ttl
-
 		let checkAllLinksFailMsg = (results) => {
 	          let msg = '', code = '', url = ''
 	          if (Array.isArray(results)) {
@@ -22,7 +20,6 @@ for(let page in testPages) {
 	            return results
 	          }
         }
-
 		describe(`Test ${title}`, () => {
 			//Verify page title, not much necessary for mobile site,
 			//since all pages have the same title
@@ -37,7 +34,7 @@ for(let page in testPages) {
 
 			it('Page is giving a 200', function(done) {
 		    	this.timeout(360000)
-				coverageModule.getStatusCode(url).then(
+				coverageTest.getStatusCode(url).then(
 					(value) => {
 						console.log("status code: " + value)
 						done(assert.strictEqual(value, 200, 
@@ -50,7 +47,7 @@ for(let page in testPages) {
 			if(page === 'homepage'){
 				it('All links in page are giving a 200', function(done) {
 			    	this.timeout(360000)
-			    	coverageModule.checkAllPageLinks(url).then(
+			    	coverageTest.checkAllPageLinks(url).then(
 	                  ({output,links}) => {
 	                    done(
 	                      assert.strictEqual(
@@ -67,7 +64,7 @@ for(let page in testPages) {
 
 			it('No console errors', function(done) {
 		    	this.timeout(360000)
-				coverageModule.consoleErrors(url).then(
+				coverageTest.consoleErrors(url).then(
 					(value) => {
                       let count = value.length
 					  done(assert.isTrue(
@@ -81,7 +78,7 @@ for(let page in testPages) {
 			it(`Time to First Byte shouldn\'t be greater than ${ttfb/1000}s`, 
 				function(done) {
 		    	this.timeout(360000)
-                coverageModule.responseTime(url, ttfb).then(
+                coverageTest.responseTime(url, ttfb).then(
                   	(value) => {
 	                    done(
 	                      assert.isTrue(
@@ -96,7 +93,7 @@ for(let page in testPages) {
 			it(`Time to fully load shouldn\'t be greater than ${ttl/1000}s`, 
 				function(done) {
 		    	this.timeout(360000)
-                coverageModule.loadTime(url, ttl).then(
+                coverageTest.loadTime(url, ttl).then(
                   	(value) => {
 	                    done(
 	                      assert.isTrue(
@@ -110,7 +107,7 @@ for(let page in testPages) {
 
 			it('Check favicon', function(done) {
 		    	this.timeout(360000)
-		    	coverageModule.checkFavicon(url).then(
+		    	coverageTest.checkFavicon(url).then(
                   ({output, error}) => {
                     done(
                     assert.strictEqual(

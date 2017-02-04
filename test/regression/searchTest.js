@@ -1,8 +1,6 @@
 "use strict";
-const appDir = __dirname,
-	assert = require(`${appDir}/../../tools/assert-fix`),
-	coverageModule = require(`${appDir}/../../tools/coverage-module`).started,
-	searchApproaches = require(`${appDir}/../../data/search_input`),
+const coverageTest = coverageModule.started,
+	searchApproaches = require(`${utilDirectory}/../data/search_input`),
 	url = searchApproaches['url']
 
 describe('Searched by Hymn names', () => {
@@ -11,7 +9,7 @@ describe('Searched by Hymn names', () => {
 			(name) => {
 				it(`Searched: ${name}`, function(done) {
 		    		this.timeout(360000)
-		    		coverageModule.searchByName(url, name, 'en').then(
+		    		coverageTest.searchByName(url, name, 'en').then(
 		    			(value) => {
 		    				done(assert.isTrue(
 							    value,
@@ -28,7 +26,7 @@ describe('Searched by Hymn names', () => {
 			(name) => {
 				it(`Searched: ${name}`, function(done) {
 		    		this.timeout(360000)
-		    		coverageModule.searchByName(url, name, 'zh-CN').then(
+		    		coverageTest.searchByName(url, name, 'zh-CN').then(
 		    			(value) => {
 		    				done(assert.isTrue(
 							    value,
@@ -45,7 +43,7 @@ describe('Searched by Hymn names', () => {
 			(name) => {
 				it(`Searched: ${name}`, function(done) {
 		    		this.timeout(360000)
-		    		coverageModule.searchByName(url, name, 'zh-TW').then(
+		    		coverageTest.searchByName(url, name, 'zh-TW').then(
 		    			(value) => {
 		    				done(assert.isTrue(
 							    value,
@@ -64,7 +62,7 @@ describe('Searched by Hymn index', () => {
 		(index) => {
 			it(`Searched index: ${index}`, function(done) {
 		    	this.timeout(360000)
-		    	coverageModule.searchByName(url, index, 'index').then(
+		    	coverageTest.searchByName(url, index, 'index').then(
 	    			(value) => {
 	    				done(assert.isTrue(
 						    value,
@@ -83,7 +81,7 @@ describe('Searched by special input', () => {
 			(input) => {
 				it(`Searched input: ${input}`, function(done) {
 			    	this.timeout(360000)
-			    	coverageModule.searchByName(url, input, 'input').then(
+			    	coverageTest.searchByName(url, input, 'input').then(
 		    			(value) => {
 		    				done(assert.isTrue(
 							    value,
@@ -100,7 +98,7 @@ describe('Searched by special input', () => {
 			(input) => {
 				it(`Searched input: ${input}`, function(done) {
 			    	this.timeout(360000)
-			    	coverageModule.searchByName(url, input, 'space').then(
+			    	coverageTest.searchByName(url, input, 'space').then(
 		    			(value) => {
 		    				done(assert.isTrue(
 							    value,
@@ -117,7 +115,7 @@ describe('Searched by special input', () => {
 			(input) => {
 				it(`Searched but not found: ${input}`, function(done) {
 			    	this.timeout(360000)
-			    	coverageModule.searchByName(url, input, 'fail').then(
+			    	coverageTest.searchByName(url, input, 'fail').then(
 		    			(value) => {
 		    				done(assert.isTrue(
 							    value,
