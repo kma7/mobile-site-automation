@@ -10,8 +10,8 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './test/regression/**/coverageTest.js',
-        './test/regression/**/searchTest.js'
+        './test/regression/**/coverageTest.js'
+        // './test/regression/**/searchTest.js'
     ],
     suites: {
         login:[],
