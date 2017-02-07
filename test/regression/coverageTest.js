@@ -1,6 +1,5 @@
 "use strict";
 const coverageTest = coverageModule.started,
-	// coverageTest = require(`${appDir}/../../utilities/coverage-module`).started,
 	testPages = require(`${utilDirectory}/../data/test_pages`)
 
 for(let page in testPages) {

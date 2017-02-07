@@ -1,7 +1,5 @@
 "use strict";
 const { headPromise } = require("./http-module"),
-    async = require("asyncawait/async"),
-    await = require("asyncawait/await"),
     cn_twMap = {
         "伟大的神": "偉大的神",
         "你是我异象": "祢是我異象",
@@ -239,16 +237,10 @@ console.log(links)
     }
 }
 
-module.exports = {
-    started: new CoverageModule(),
-    class: CoverageModule
-}
-
-//Once exported as a function
-/*module.exports = () => {
+module.exports = () => {
     return {
         started: new CoverageModule(),
         class: CoverageModule
     }
 }
-*/
+
