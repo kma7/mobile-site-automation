@@ -1,11 +1,13 @@
+'use strict'
+
 const AssertTryCatch = function () {
-  return new Proxy( this, {
+  return new Proxy(this, {
     get: function (rcvr, p) {
       return function (...args) {
-        return rcvr.__noSuchMethod__.call(rcvr, p, args);
+        return rcvr.__noSuchMethod__.call(rcvr, p, args)
       }
     }
-  });
+  })
 }
 
 AssertTryCatch.prototype.__noSuchMethod__ = function (method, options) {
@@ -19,4 +21,4 @@ AssertTryCatch.prototype.__noSuchMethod__ = function (method, options) {
   return output
 }
 
-module.exports = new AssertTryCatch();
+module.exports = new AssertTryCatch()

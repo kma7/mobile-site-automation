@@ -1,5 +1,7 @@
 #SVCA Mobile Site Automation
 
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+
 #Prerequisites
 You will need to have Node.js (Install the latest version of Node.js) and NPM (comes with Node) installed on your machine. Check out their project websites for more instructions
 
