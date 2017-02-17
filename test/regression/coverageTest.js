@@ -8,21 +8,8 @@ for (let page in testPages) {
     let title = testPages[page].title,
       url = testPages[page].url,
       ttfb = testPages[page].ttfb,
-      ttl = testPages[page].ttl,
-      checkAllLinksFailMsg = (results) => {
-      let msg = '',
-        code = '',
-        url = ''
-      if (Array.isArray(results)) {
-        for ({ url, code }
-          of results) {
-          msg += `url: ${url}\nstatusCode: ${code}\n`
-        }
-        return msg
-      } else if (typeof results === 'string') {
-        return results
-      }
-    }
+      ttl = testPages[page].ttl
+
     describe(`Test ${title}`, () => {
       // Verify page title, not much necessary for mobile site,
       // since all pages have the same title
@@ -49,13 +36,13 @@ for (let page in testPages) {
         it('All links in page are giving a 200', function(done) {
           this.timeout(360000)
           coverageTest.checkAllPageLinks(url).then(
-            ({ output, links }) => {
+            ({ output, failMsg }) => {
               done(
                 assert.strictEqual(
                   output,
                   true,
-                  `These pages need to be checked` +
-                  `\n${checkAllLinksFailMsg(links)}`
+                  `These pages need to be checked:` +
+                  `\n${failMsg}`
                 )
               )
             }
