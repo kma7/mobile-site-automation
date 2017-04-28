@@ -1,11 +1,11 @@
-#SVCA Mobile Site Automation
+# SVCA Mobile Site Automation
 
 [![Standard - JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-#Prerequisites
+# Prerequisites
 You will need to have [Node.js](https://nodejs.org/en/) and NPM (comes with Node) installed on your machine.
 
-#Installation
+# Installation
 	$ cd <your projects folder>
 	$ git https://github.com/kma7/mobile-site-automation.git
 	$ cd mobile-site-automation/
@@ -21,5 +21,5 @@ Execute the test runner:
 
 	$ npm test
 
-#Note
+# Note
 The configuration file contains all necessary information to run your test suite. It is a node module that exports a JSON.
